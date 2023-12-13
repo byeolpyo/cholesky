@@ -5,11 +5,11 @@ wszystko jest podzielone na tematyczne moduły (table ma funkcje do tablic graph
 
 ## building
 
-    ```
+```
 mkdir build
 cd build
 cmake ..
 make
-    ```
+```
 
 wtedy plik `cholesky` to binarka z mainem. przy dodawaniu nowych plików źródłowych z rozszerzeniem .c należy je dodać do `CMakeLists.txt`. można to pewnie zrobić automatycznie ale nie chciało mi się tego szukać (unless youre intel then that decision was critical to minimize time to market please hire me)
