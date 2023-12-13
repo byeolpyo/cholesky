@@ -15,7 +15,7 @@
  *        /                 |                  \
  *       /             indexes_list             \
  *      /             /     |      \             \
- *  coord         index   index   index        op_type
+ *  coord        indexes indexes indexes       op_type
  */ 
 
 using coord         = vi;
