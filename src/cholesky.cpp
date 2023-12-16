@@ -12,32 +12,42 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl;
     */
     graph g = generate_dag(t);
-    print_vertex_list(g.first); 
+//    print_vertex_list(g.first); 
     
-    std::cout << std::endl;
-    print_edge_list(g.second); 
+//    print_edge_list(g.second); 
    
     auto f1 = generate_random_F(2);
     auto f2 = generate_random_F(2);
     auto f3 = generate_random_F(1);
-    //print_F(f1);
+    
+    auto a1 = generate_arch(g, f1);
+    auto a2 = generate_arch(g, f2);
+    auto a3 = generate_arch(g, f3);
+    
+    std::cout << "Architektura 1:" << std::endl;
+    print_F(f1);
+    std::cout << std::endl;
+    print_arch(a1);
+    std::cout << std::endl;
+
+    std::cout << "Architektura 2:" << std::endl;
+    print_F(f2);
+    std::cout << std::endl;
+    print_arch(a2);
+    std::cout << std::endl;
+
+    std::cout << "Architektura 3:" << std::endl;
+    print_F(f3);
+    std::cout << std::endl;
+    print_arch(a3);
+    std::cout << std::endl;
+
+
     /*
     std::cout << std::endl;
     print_F(f2);
     std::cout << std::endl;
     print_F(f3);
     */
-
-    auto t1_s = translate_to_coords(f1, g.first);
-    auto t1_t = translate_to_time(g.first);
-    //print_arch(t1_s, t1_t);
-    /*
-    print_F(t1_s);
-    for(auto x : t1_t) {
-        std::cout << x << "\n";
-    }
-    */
-    proc_list_w_op p_op = collapse_list_to_arch(t1_s, t1_t);
-    generate_connections(p_op, g.second);
     return 0;
 }

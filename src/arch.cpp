@@ -99,7 +99,7 @@ vi translate_to_time(vertex_list vl) {
     }
     return res;
 }
-
+/*
 void print_arch(vvi tran_coords, vi tran_time) {
     std::cout << "coords\t\tstep\n";
     for(int i = 0; i < tran_time.size(); i++) {
@@ -109,11 +109,13 @@ void print_arch(vvi tran_coords, vi tran_time) {
         std::cout << "\t\t" << tran_time[i] << std::endl;
     }
 }
+*/
 
 proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
     proc_list_w_op res;
 
     int max_step = *std::max_element(tran_time.begin(), tran_time.end());
+    max_step += 1;
 
     for(auto c : tran_coords) {
         vi instructions(max_step, -1);
@@ -121,32 +123,13 @@ proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
     }
     
     for(int i = 0; i < tran_coords.size(); i++) {
-        res[tran_coords[i]][tran_time[i]-1] = i;
+        res[tran_coords[i]][tran_time[i]] = i;
     }
-
-    for(auto i : res) {
-        for(auto x : i.first) {
-            std::cout << x << " ";
-        }
-        
-        std::cout << " -> ";
-        for(auto x : i.second) {
-            if(x == -1) {
-                std::cout << "- ";
-            }
-            else {
-                std::cout << x << " ";
-            }
-        }
-        std::cout << std::endl;
-
-    }
-
     return res;
 }
 
-std::vector<vvi> generate_connections(proc_list_w_op p_op, edge_list el) {
-    std::vector<vvi> res;
+proc_conn generate_connections(proc_list_w_op p_op, edge_list el) {
+    proc_conn res;
     proc_list_w_op::iterator it1 = p_op.begin();
     while(it1 != p_op.end()) {
         auto it2 = it1;
@@ -179,15 +162,6 @@ std::vector<vvi> generate_connections(proc_list_w_op p_op, edge_list el) {
         it1++;
     }
    
-    for(auto p : res) {
-        for(auto i : p ) {
-            for(auto x : i) {
-                std::cout << x << " ";
-            }
-            std::cout << "\t";
-        }
-        std::cout << std::endl;
-    }
     /* ziteruj po wsz procesorach (1, 2)
      *      ziteruj po liscie wezlow (a, b)
      *          jesli find1(a) i find2(b)
@@ -198,8 +172,48 @@ std::vector<vvi> generate_connections(proc_list_w_op p_op, edge_list el) {
     return res;
 }
 
-/*
-arch generate_arch(vvi tran_coords, vi tran_time) {
+void print_op_list(proc_list_w_op p_op) {
+    for(auto i : p_op) {
+        for(auto x : i.first) {
+            std::cout << x << " ";
+        }
+        
+        std::cout << " -> ";
+        for(auto x : i.second) {
+            if(x == -1) {
+                std::cout << "- ";
+            }
+            else {
+                std::cout << x << " ";
+            }
+        }
+        std::cout << std::endl;
 
+    }
 }
-*/
+
+void print_conn(proc_conn p_c) {
+    for(auto p : p_c) {
+        for(auto i : p ) {
+            for(auto x : i) {
+                std::cout << x << " ";
+            }
+            std::cout << "\t";
+        }
+        std::cout << std::endl;
+    }
+}
+
+void print_arch(arch a) {
+    print_op_list(a.first);
+    std::cout << std::endl;
+    print_conn(a.second);
+}
+
+arch generate_arch(graph g, vvi F) {
+    auto t_s = translate_to_coords(F, g.first);
+    auto t_t = translate_to_time(g.first);
+    proc_list_w_op p_op = collapse_list_to_arch(t_s, t_t);
+    proc_conn p_c = generate_connections(p_op, g.second);
+    return {p_op, p_c};
+}
