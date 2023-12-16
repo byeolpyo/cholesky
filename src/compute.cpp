@@ -3,7 +3,7 @@
 #define RAND_A -10
 #define RAND_B 10
 
-bool seed_initialized = false;
+static bool seed_initialized = false;
 
 static int rand_range() {
     return (RAND_A)+std::rand()%((RAND_B)-(RAND_A));
