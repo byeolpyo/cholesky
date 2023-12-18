@@ -1,0 +1,6 @@
+czas w sekundach:
+(latencja + ilosc taktow algorytmu)*czestotliwosc (320 mhz, to on podal)
+
+latencja = dlugosc najdluzszej sciezki * 28 (stala ilosc taktow "latencja ukladu", to on podal)
+
+

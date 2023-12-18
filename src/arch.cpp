@@ -88,6 +88,18 @@ vvi translate_to_coords(vvi F, vertex_list vl) {
     return res;
 }
 
+/* TODO greedy scheduling 
+ * search over the dag
+ * assign cycles greedily
+ *      if(incoming vertices are assigned) {
+ *          assign (max of incoming) + 1
+ *      }
+ *      else wait?
+ *
+ *
+ * otherwise -> color the graph
+ * */
+
 vi translate_to_time(vertex_list vl) {
     vi res;
     for(auto ver : vl) {
@@ -110,6 +122,15 @@ void print_arch(vvi tran_coords, vi tran_time) {
     }
 }
 */
+
+/* TODO change representation 
+ * instead of
+ * EP -> - - - - - 1 - - - - 56 - - - 100
+ *
+ * do this:
+ *
+ * EP -> 1 (cycle 5), 56 (cycle 9), 100 (cycle 13)
+ * */
 
 proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
     proc_list_w_op res;
