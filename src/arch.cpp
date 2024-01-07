@@ -100,6 +100,38 @@ vvi translate_to_coords(vvi F, vertex_list vl) {
  * otherwise -> color the graph
  * */
 
+
+vi schedule(graph g, vvi coords) {
+    vi res;
+    //std::map<vertex, int> sch;
+    vertex_list vl = g.first;
+    edge_list el = g.second;
+
+    vi sch(vl.size());
+
+    vvi tmp;
+    tmp.push_back(sch);
+
+   // print_F(tmp);
+
+    for(int i = 0; i < vl.size(); i++) {
+       // std::cout << i << " " << vl[i].second << std::endl;
+
+        for(auto e : el) {
+            if(e.first == i) {
+                sch[e.second] = std::max(sch[e.second], sch[i]+1);
+                //std::cout << "\t-> " << e.second << std::endl;
+            }
+        }
+
+        //std::cout << std::endl;
+    }
+
+    tmp.clear();
+    tmp.push_back(sch);
+    
+    return sch;
+}
 vi translate_to_time(vertex_list vl) {
     vi res;
     for(auto ver : vl) {
@@ -122,6 +154,12 @@ void print_arch(vvi tran_coords, vi tran_time) {
     }
 }
 */
+
+/* 24 takty na wszystkie operacje
+ * 320 mhz 
+ *
+ *
+ * */
 
 /* TODO change representation 
  * instead of
@@ -233,7 +271,9 @@ void print_arch(arch a) {
 
 arch generate_arch(graph g, vvi F) {
     auto t_s = translate_to_coords(F, g.first);
-    auto t_t = translate_to_time(g.first);
+    auto t_t = schedule(g, t_s);
+
+    //auto t_t = translate_to_time(g.first);
     proc_list_w_op p_op = collapse_list_to_arch(t_s, t_t);
     proc_conn p_c = generate_connections(p_op, g.second);
     return {p_op, p_c};

@@ -19,6 +19,7 @@ using arch              = std::pair<proc_list_w_op, std::vector<vvi>>;
 vvi     generate_random_F(int m);
 void    print_F(vvi F);
 vvi     translate_to_coords(vvi F, vertex_list vl);
+vi      schedule(graph g, vvi coords);
 vi      translate_to_time(vertex_list vl);
 void    print_op_list(proc_list_w_op p_op);
 void    print_conn(proc_conn p_c);
