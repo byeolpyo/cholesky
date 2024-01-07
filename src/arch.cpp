@@ -101,34 +101,33 @@ vvi translate_to_coords(vvi F, vertex_list vl) {
  * */
 
 
+static void print_vi(vi v) {
+    for(auto x : v) {
+        std::cout << x << " ";
+    } 
+}
+
 vi schedule(graph g, vvi coords) {
-    vi res;
-    //std::map<vertex, int> sch;
+    std::map<std::pair<vi, int>, int> sch_map;
     vertex_list vl = g.first;
     edge_list el = g.second;
-
     vi sch(vl.size());
 
-    vvi tmp;
-    tmp.push_back(sch);
-
-   // print_F(tmp);
-
     for(int i = 0; i < vl.size(); i++) {
-       // std::cout << i << " " << vl[i].second << std::endl;
-
+        
         for(auto e : el) {
             if(e.first == i) {
                 sch[e.second] = std::max(sch[e.second], sch[i]+1);
-                //std::cout << "\t-> " << e.second << std::endl;
+                auto my_pair = std::pair<vi, int>{coords[e.second], sch[e.second]};
+                auto it = sch_map.find(my_pair);
+                if(it != sch_map.end()) {
+                    if(sch_map[my_pair] != e.second)
+                        sch[e.second] += 1;
+                }
+                sch_map.insert({{coords[e.second], sch[e.second]}, e.second});
             }
         }
-
-        //std::cout << std::endl;
     }
-
-    tmp.clear();
-    tmp.push_back(sch);
     
     return sch;
 }
@@ -191,9 +190,12 @@ proc_conn generate_connections(proc_list_w_op p_op, edge_list el) {
     proc_conn res;
     proc_list_w_op::iterator it1 = p_op.begin();
     while(it1 != p_op.end()) {
-        auto it2 = it1;
-        it2++;
+        auto it2 = p_op.begin();
         while(it2 != p_op.end()) {
+            if(it1 == it2) {
+                it2++;
+                continue;
+            };
             for(auto edg : el) {
                 vi proc1 = it1->second;
                 vi proc1_coords = it1->first;
@@ -220,14 +222,6 @@ proc_conn generate_connections(proc_list_w_op p_op, edge_list el) {
         }
         it1++;
     }
-   
-    /* ziteruj po wsz procesorach (1, 2)
-     *      ziteruj po liscie wezlow (a, b)
-     *          jesli find1(a) i find2(b)
-     *              1 -> 2
-     *          jesli find1(b) i find2(a)
-     *              2 -> 1
-     */
     return res;
 }
 

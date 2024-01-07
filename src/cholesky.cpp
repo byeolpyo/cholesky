@@ -8,14 +8,22 @@ int main(int argc, char* argv[]) {
     
     table t = generate_table(4);
     
-    print_table(t);
-    std::cout << std::endl;
+ //   print_table(t);
+ //   std::cout << std::endl;
    
     graph g = generate_dag(t);
   //  print_vertex_list(g.first); 
-    
-    print_edge_list(g.second); 
+     //   print_edge_list(g.second); 
    
+
+    /* -1	-1	0	
+        1   -1	0 */
+
+     /* -1	-1	1	
+         0	0	0	*/
+
+    /* 1	1	-1	*/
+
     auto f1 = generate_random_F(2);
 
     vvi c = translate_to_coords(f1, g.first);
@@ -34,7 +42,7 @@ int main(int argc, char* argv[]) {
 
         
 //    std::cout << "Architektura 1:" << std::endl;
- //   print_F(f1);
+    print_F(f1);
   //  std::cout << std::endl;
     print_arch(a1);
  //   std::cout << std::endl;
