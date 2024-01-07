@@ -107,6 +107,7 @@ static void print_vi(vi v) {
     } 
 }
 
+/* TODO faster! */
 vi schedule(graph g, vvi coords) {
     std::map<std::pair<vi, int>, int> sch_map;
     vertex_list vl = g.first;
@@ -186,6 +187,7 @@ proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
     return res;
 }
 
+/* TODO faster? */
 proc_conn generate_connections(proc_list_w_op p_op, edge_list el) {
     proc_conn res;
     proc_list_w_op::iterator it1 = p_op.begin();
@@ -241,8 +243,25 @@ void print_op_list(proc_list_w_op p_op) {
             }
         }
         std::cout << std::endl;
-
     }
+
+    std::cout << "Liczba EP - " << p_op.size() << std::endl;
+    std::cout << "Liczba taktow - " <<(*(p_op.begin())).second.size() << std::endl;
+}
+
+float avg_arch_load(arch a, int l_op) {
+    auto p = a.first;
+    int l_ep = p.size();
+    int T = (*(p.begin())).second.size();
+    return ((float)l_op)/((float)T*(float)l_ep)*100.0;
+}
+
+int get_tick(arch a) {
+    return (*(a.first.begin())).second.size();
+}
+
+int get_ep(arch a) {
+    return a.first.size();
 }
 
 void print_conn(proc_conn p_c) {

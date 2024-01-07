@@ -1,10 +1,12 @@
 #include "graph.h"
 
 graph generate_dag(table t) {
+    edge_list a;
     graph g = {generate_vertex_list(t), generate_edge_list(t)};
     return g;
 }
 
+/* TODO faster */
 edge_list generate_edge_list(table t) {
     edge_list res;
 

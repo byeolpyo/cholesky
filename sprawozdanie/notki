@@ -3,6 +3,11 @@ czas w sekundach:
 
 latencja = dlugosc najdluzszej sciezki * 28 (stala ilosc taktow "latencja ukladu", to on podal)
 
+czas w s (N) -> (2n-1 + )
+
+- F(N) : ilosc wezlow
+- liczba ep (z kodu) -> macierz
+- takty (z kodu) ->
 
 T       takty
 L_ep    liczba ep
