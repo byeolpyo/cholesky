@@ -1,4 +1,19 @@
 #include "graph.h"
+#include <vector>
+#include <map>
+
+static indexes_list intersection(indexes_list v1,
+                                 indexes_list v2){
+    indexes_list v3;
+
+    std::sort(v1.begin(), v1.end());
+    std::sort(v2.begin(), v2.end());
+
+    std::set_intersection(v1.begin(),v1.end(),
+                          v2.begin(),v2.end(),
+                          back_inserter(v3));
+    return v3;
+}
 
 graph generate_dag(table t) {
     edge_list a;
@@ -6,8 +21,38 @@ graph generate_dag(table t) {
     return g;
 }
 
-/* TODO faster */
 edge_list generate_edge_list(table t) {
+    edge_list res;
+    std::vector<indexes_list> s_t;
+    indexes empty_indexes = {0, 0};
+
+    std::map<indexes, std::set<int>> res_map;
+
+    for(int i = 0; i < t.size(); i++) {
+        indexes_list r_ix = std::get<1>(t[i]);
+        for(auto x : r_ix) {
+            if(x != empty_indexes) {
+                res_map[x].insert(i);    
+            }
+        }
+    }
+
+    for(auto m : res_map) {
+        vi paths;
+        for(auto s : m.second) {
+            paths.push_back(s);
+        }
+        for(int i = 0; i < paths.size()-1; i++) {
+            res.push_back({paths[i], paths[i+1]});
+        }
+    }
+
+    return res;
+
+}
+
+/*
+edge_list generate_edge_list_copy(table t) {
     edge_list res;
 
     int columns = std::get<1>(t[0]).size();
@@ -60,6 +105,7 @@ edge_list generate_edge_list(table t) {
     return res;
 
 }
+*/
 
 vertex_list generate_vertex_list(table t) {
     vertex_list res;

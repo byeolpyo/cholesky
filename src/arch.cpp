@@ -114,8 +114,26 @@ vi schedule(graph g, vvi coords) {
     edge_list el = g.second;
     vi sch(vl.size());
 
-    for(int i = 0; i < vl.size(); i++) {
-        
+    std::sort(el.begin(), el.end());
+
+    for(auto e : el) {
+        sch[e.second] = std::max(sch[e.second], sch[e.first]+1);
+        auto my_pair = std::pair<vi, int>{coords[e.second], sch[e.second]};
+        auto it = sch_map.find(my_pair);
+        if(it != sch_map.end()) {
+            if(sch_map[my_pair] != e.second)
+                sch[e.second] += 1;
+        }
+        sch_map.insert({{coords[e.second], sch[e.second]}, e.second});
+    }
+
+/*
+    std::map<std::pair<vi, int>, int> sch_map;
+    vertex_list vl = g.first;
+    edge_list el = g.second;
+    vi sch(vl.size());
+
+    for(int i = 0; i < vl.size(); i++) {    
         for(auto e : el) {
             if(e.first == i) {
                 sch[e.second] = std::max(sch[e.second], sch[i]+1);
@@ -129,7 +147,7 @@ vi schedule(graph g, vvi coords) {
             }
         }
     }
-    
+  */  
     return sch;
 }
 vi translate_to_time(vertex_list vl) {
@@ -188,8 +206,16 @@ proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
 }
 
 /* TODO faster? */
-proc_conn generate_connections(proc_list_w_op p_op, edge_list el) {
+proc_conn generate_connections(vvi coords, edge_list el) {
     proc_conn res;
+    
+    for(auto e : el) {
+        vvi c = {coords[e.first], coords[e.second]};
+        res.insert(c);
+    } 
+
+
+/*
     proc_list_w_op::iterator it1 = p_op.begin();
     while(it1 != p_op.end()) {
         auto it2 = p_op.begin();
@@ -224,7 +250,13 @@ proc_conn generate_connections(proc_list_w_op p_op, edge_list el) {
         }
         it1++;
     }
+    */
     return res;
+}
+
+void print_parameters(proc_list_w_op p_op) {
+    std::cout << "Liczba EP - " << p_op.size() << std::endl;
+    std::cout << "Liczba taktow - " <<(*(p_op.begin())).second.size() << std::endl;
 }
 
 void print_op_list(proc_list_w_op p_op) {
@@ -244,9 +276,6 @@ void print_op_list(proc_list_w_op p_op) {
         }
         std::cout << std::endl;
     }
-
-    std::cout << "Liczba EP - " << p_op.size() << std::endl;
-    std::cout << "Liczba taktow - " <<(*(p_op.begin())).second.size() << std::endl;
 }
 
 float avg_arch_load(arch a, int l_op) {
@@ -279,6 +308,7 @@ void print_conn(proc_conn p_c) {
 void print_arch(arch a) {
     print_op_list(a.first);
     std::cout << std::endl;
+    print_parameters(a.first);
     print_conn(a.second);
 }
 
@@ -286,8 +316,7 @@ arch generate_arch(graph g, vvi F) {
     auto t_s = translate_to_coords(F, g.first);
     auto t_t = schedule(g, t_s);
 
-    //auto t_t = translate_to_time(g.first);
     proc_list_w_op p_op = collapse_list_to_arch(t_s, t_t);
-    proc_conn p_c = generate_connections(p_op, g.second);
+    proc_conn p_c = generate_connections(t_s, g.second);
     return {p_op, p_c};
 }
