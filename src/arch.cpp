@@ -2,40 +2,6 @@
 
 static bool seed_initialized = false;
 
-static vvi matmul(vvi a, vvi b) {
-    vvi res;
-    for(int i = 0; i < a.size(); i++) {
-        vi tmp_row;
-        for(int j = 0; j < b[0].size(); j++) {
-            int tmp_val = 0;
-            for(int k = 0; k < b.size(); k++) {
-                tmp_val += a[i][k] * b[k][j];
-            }
-            tmp_row.push_back(tmp_val);
-
-        }
-        res.push_back(tmp_row);
-    }
-    return res;
-}
-
-static vvi matmul_t(vvi a, vvi b) {
-    vvi res;
-    for(int i = 0; i < a.size(); i++) {
-        vi tmp_row;
-        for(int j = 0; j < b.size(); j++) {
-            int tmp_val = 0;
-            for(int k = 0; k < b[0].size(); k++) {
-                tmp_val += a[i][k] * b[j][k];
-            }
-            tmp_row.push_back(tmp_val);
-
-        }
-        res.push_back(tmp_row);
-    }
-    return res;
-}
-
 static vi matmul_v_t(vvi a, vi b) {
     vi res;
     for(int i = 0; i < a.size(); i++) {
@@ -88,26 +54,12 @@ vvi translate_to_coords(vvi F, vertex_list vl) {
     return res;
 }
 
-/* TODO greedy scheduling 
- * search over the dag
- * assign cycles greedily
- *      if(incoming vertices are assigned) {
- *          assign (max of incoming) + 1
- *      }
- *      else wait?
- *
- *
- * otherwise -> color the graph
- * */
-
-
 static void print_vi(vi v) {
     for(auto x : v) {
         std::cout << x << " ";
     } 
 }
 
-/* TODO faster! */
 vi schedule(graph g, vvi coords) {
     std::map<std::pair<vi, int>, int> sch_map;
     vertex_list vl = g.first;
@@ -127,68 +79,11 @@ vi schedule(graph g, vvi coords) {
         sch_map.insert({{coords[e.second], sch[e.second]}, e.second});
     }
 
-/*
-    std::map<std::pair<vi, int>, int> sch_map;
-    vertex_list vl = g.first;
-    edge_list el = g.second;
-    vi sch(vl.size());
-
-    for(int i = 0; i < vl.size(); i++) {    
-        for(auto e : el) {
-            if(e.first == i) {
-                sch[e.second] = std::max(sch[e.second], sch[i]+1);
-                auto my_pair = std::pair<vi, int>{coords[e.second], sch[e.second]};
-                auto it = sch_map.find(my_pair);
-                if(it != sch_map.end()) {
-                    if(sch_map[my_pair] != e.second)
-                        sch[e.second] += 1;
-                }
-                sch_map.insert({{coords[e.second], sch[e.second]}, e.second});
-            }
-        }
-    }
-  */  
     return sch;
 }
-vi translate_to_time(vertex_list vl) {
-    vi res;
-    for(auto ver : vl) {
-        int transl = 0;
-        for(auto x : ver.first) {
-            transl += x * 1;
-        }
-        res.push_back(transl);
-    }
-    return res;
-}
-/*
-void print_arch(vvi tran_coords, vi tran_time) {
-    std::cout << "coords\t\tstep\n";
-    for(int i = 0; i < tran_time.size(); i++) {
-        for(auto x : tran_coords[i]) {
-            std::cout << x << " ";
-        }
-        std::cout << "\t\t" << tran_time[i] << std::endl;
-    }
-}
-*/
 
-/* 24 takty na wszystkie operacje
- * 320 mhz 
- *
- *
- * */
 
-/* TODO change representation 
- * instead of
- * EP -> - - - - - 1 - - - - 56 - - - 100
- *
- * do this:
- *
- * EP -> 1 (cycle 5), 56 (cycle 9), 100 (cycle 13)
- * */
-
-proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
+proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) { 
     proc_list_w_op res;
 
     int max_step = *std::max_element(tran_time.begin(), tran_time.end());
@@ -205,7 +100,6 @@ proc_list_w_op collapse_list_to_arch(vvi tran_coords, vi tran_time) {
     return res;
 }
 
-/* TODO faster? */
 proc_conn generate_connections(vvi coords, edge_list el) {
     proc_conn res;
     
@@ -213,44 +107,6 @@ proc_conn generate_connections(vvi coords, edge_list el) {
         vvi c = {coords[e.first], coords[e.second]};
         res.insert(c);
     } 
-
-
-/*
-    proc_list_w_op::iterator it1 = p_op.begin();
-    while(it1 != p_op.end()) {
-        auto it2 = p_op.begin();
-        while(it2 != p_op.end()) {
-            if(it1 == it2) {
-                it2++;
-                continue;
-            };
-            for(auto edg : el) {
-                vi proc1 = it1->second;
-                vi proc1_coords = it1->first;
-                vi proc2 = it2->second;
-                vi proc2_coords = it2->first;
-                int a = edg.first; 
-                int b = edg.second; 
-                auto f1 = std::find(proc1.begin(), proc1.end(), a);
-                auto f2 = std::find(proc2.begin(), proc2.end(), b);
-               
-                if(f1 != proc1.end() && f2 != proc2.end()) {
-                    res.push_back({proc1_coords, proc2_coords});
-                    break;
-                } 
-                std::find(proc1.begin(), proc1.end(), b);
-                std::find(proc2.begin(), proc2.end(), a);
-                
-                if(f1 != proc1.end() && f2 != proc2.end()) {
-                    res.push_back({proc2_coords, proc1_coords});
-                    break;
-                } 
-            }
-            it2++;
-        }
-        it1++;
-    }
-    */
     return res;
 }
 

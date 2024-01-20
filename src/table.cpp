@@ -21,7 +21,7 @@ table generate_table(int n) {
                 
                 coord           tmp_ws{i+1, j+1, k+1};
                 indexes         tmp_ix{i+1, i+1};
-                indexes_list    tmp_gr{tmp_ix, empty_indexes, tmp_ix, empty_indexes};
+                indexes_list    tmp_gr{tmp_ix, empty_indexes, empty_indexes, empty_indexes};
                 record          tmp_rk{tmp_ws, tmp_gr, "sqrt"};
                 
                 t.push_back(tmp_rk);

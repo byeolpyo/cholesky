@@ -2,28 +2,13 @@
 #include <vector>
 #include <map>
 
-static indexes_list intersection(indexes_list v1,
-                                 indexes_list v2){
-    indexes_list v3;
-
-    std::sort(v1.begin(), v1.end());
-    std::sort(v2.begin(), v2.end());
-
-    std::set_intersection(v1.begin(),v1.end(),
-                          v2.begin(),v2.end(),
-                          back_inserter(v3));
-    return v3;
-}
-
 graph generate_dag(table t) {
-    edge_list a;
     graph g = {generate_vertex_list(t), generate_edge_list(t)};
     return g;
 }
 
 edge_list generate_edge_list(table t) {
     edge_list res;
-    std::vector<indexes_list> s_t;
     indexes empty_indexes = {0, 0};
 
     std::map<indexes, std::set<int>> res_map;
@@ -48,7 +33,6 @@ edge_list generate_edge_list(table t) {
     }
 
     return res;
-
 }
 
 /*
