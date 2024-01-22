@@ -7,6 +7,10 @@ graph generate_dag(table t) {
     return g;
 }
 
+/* this is my beloved O(n) child
+ * trades O(n^2) time and O(1) space to O(n) time and O(n) space 
+ * you can do O(n) and O(1) time by using a queue
+ */
 edge_list generate_edge_list(table t) {
     edge_list res;
     indexes empty_indexes = {0, 0};
