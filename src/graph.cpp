@@ -10,6 +10,8 @@ graph generate_dag(table t) {
 /* this is my beloved O(n) child
  * trades O(n^2) time and O(1) space to O(n) time and O(n) space 
  * you can do O(n) and O(1) time by using a queue
+ *
+ * if you decided to do that email starforgeml@gmail.com lets talk
  */
 edge_list generate_edge_list(table t) {
     edge_list res;
@@ -38,62 +40,6 @@ edge_list generate_edge_list(table t) {
 
     return res;
 }
-
-/*
-edge_list generate_edge_list_copy(table t) {
-    edge_list res;
-
-    int columns = std::get<1>(t[0]).size();
-    int rows = t.size();
-
-    indexes empty_indexes = {0, 0};
-
-    for(int c = 0; c < columns; c++) {
-        std::set<indexes> ix_value_set;
-
-        for(auto x : t) {
-            indexes_list tmp_il = std::get<1>(x);
-            indexes tmp_ix = tmp_il[c]; 
-            if(tmp_ix != empty_indexes) {
-                ix_value_set.insert(tmp_ix);
-            }
-        }
-        
-        for(auto ix_value : ix_value_set) { 
-            int i = 0;
-            indexes tmpppppp = empty_indexes;
-            
-            for(i = 0; i < rows; i++) {
-                indexes_list tmp_il = std::get<1>(t[i]);
-                tmpppppp = tmp_il[c];
-                if(tmpppppp == ix_value) {
-                    break;
-                }
-            }
-
-            int j = 1; 
-
-            while(i+j < rows) {
-                indexes_list tmp_il = std::get<1>(t[i+j]);
-                indexes tmp_ix = tmp_il[c]; 
-                if(tmp_ix != ix_value) {
-                    j++;
-                    continue;
-                } 
-                if(tmp_ix == ix_value) {
-                    res.push_back({i, i+j});
-                }
-                i += j;
-                j = 1;
-            }
-
-        }
-    }
-    
-    return res;
-
-}
-*/
 
 vertex_list generate_vertex_list(table t) {
     vertex_list res;

@@ -164,7 +164,6 @@ void print_conn(proc_conn p_c) {
 void print_arch(arch a) {
     print_op_list(a.first);
     std::cout << std::endl;
-//    print_parameters(a.first);
     print_conn(a.second);
 }
 
